@@ -36,7 +36,7 @@ export default function HomePage() {
           <h1 className="text-5xl md:text-6xl font-bold text-gray-900 mb-6 leading-tight">
             고객의 사랑을
             <br />
-            <span className="text-brand-600">Wall of Love</span>로
+            <span className="text-brand-600">StarBoard</span>로
           </h1>
           
           <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
