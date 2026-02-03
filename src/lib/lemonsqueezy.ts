@@ -2,9 +2,6 @@ import {
   lemonSqueezySetup,
   createCheckout,
   getSubscription,
-  cancelSubscription,
-  listProducts,
-  listVariants,
 } from "@lemonsqueezy/lemonsqueezy.js";
 
 // Initialize Lemon Squeezy
@@ -56,31 +53,6 @@ export async function getSubscriptionDetails(subscriptionId: string) {
   initLemonSqueezy();
   const subscription = await getSubscription(subscriptionId);
   return subscription.data?.data;
-}
-
-// Cancel subscription
-export async function cancelUserSubscription(subscriptionId: string) {
-  initLemonSqueezy();
-  const result = await cancelSubscription(subscriptionId);
-  return result.data?.data;
-}
-
-// Get products and variants (for debugging)
-export async function getProductsAndVariants() {
-  initLemonSqueezy();
-  
-  const storeId = process.env.LEMONSQUEEZY_STORE_ID;
-  if (!storeId) {
-    throw new Error("LEMONSQUEEZY_STORE_ID is not set");
-  }
-
-  const products = await listProducts({ filter: { storeId } });
-  const variants = await listVariants({ filter: { storeId } });
-
-  return {
-    products: products.data?.data,
-    variants: variants.data?.data,
-  };
 }
 
 // Webhook event types
