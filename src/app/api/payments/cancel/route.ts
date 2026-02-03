@@ -20,23 +20,30 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "User not found" }, { status: 404 });
     }
 
-    if (!user.lsSubscriptionId) {
-      return NextResponse.json({ error: "No active subscription" }, { status: 400 });
+    // Try to cancel on Lemon Squeezy (but don't fail if it errors)
+    if (user.lsSubscriptionId) {
+      try {
+        await cancelUserSubscription(user.lsSubscriptionId);
+        console.log("Lemon Squeezy subscription cancelled:", user.lsSubscriptionId);
+      } catch (lsError) {
+        console.error("Lemon Squeezy cancel error (continuing anyway):", lsError);
+        // Continue to update DB even if LS fails
+      }
     }
 
-    // Cancel the subscription
-    await cancelUserSubscription(user.lsSubscriptionId);
-
-    // Update user in database
+    // Always update user in database
     await db.user.update({
       where: { id: user.id },
       data: {
         plan: "FREE",
         lsSubscriptionId: null,
+        lsCustomerId: null,
         lsVariantId: null,
         lsCurrentPeriodEnd: null,
       },
     });
+
+    console.log("User downgraded to FREE:", user.email);
 
     return NextResponse.json({ success: true, message: "Subscription cancelled" });
   } catch (error) {
