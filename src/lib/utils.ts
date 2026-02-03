@@ -6,11 +6,15 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 export function generateSlug(name: string): string {
-  return name
+  // 한글은 랜덤 문자로 대체, 영문/숫자만 허용
+  const base = name
     .toLowerCase()
-    .replace(/[^a-z0-9가-힣]+/g, "-")
+    .replace(/[^a-z0-9]+/g, "-")
     .replace(/^-|-$/g, "")
-    .substring(0, 50) + "-" + Math.random().toString(36).substring(2, 8);
+    .substring(0, 20);
+  
+  const random = Math.random().toString(36).substring(2, 8);
+  return base ? `${base}-${random}` : `project-${random}`;
 }
 
 export function formatDate(date: Date): string {
