@@ -1,7 +1,7 @@
 /**
- * starboard Widget - 고객 후기 임베드 스크립트
+ * starboard Widget - Customer Testimonials Embed Script
  * 
- * 사용법:
+ * Usage:
  * <div id="starboard-widget" data-slug="your-project-slug"></div>
  * <script src="https://starboard.app/widget.js"></script>
  */
@@ -12,10 +12,13 @@
   const WIDGET_ID = 'starboard-widget';
   const API_BASE = window.starboard_API_BASE || (document.currentScript?.src.replace('/widget.js', '') || '');
 
-  // 스타일 주입
-  function injectStyles() {
-    if (document.getElementById('starboard-styles')) return;
+  // Inject styles
+  function injectStyles(primaryColor = '#6366f1', theme = 'LIGHT') {
+    const existingStyles = document.getElementById('starboard-styles');
+    if (existingStyles) existingStyles.remove();
 
+    const isDark = theme === 'DARK' || (theme === 'AUTO' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+    
     const styles = `
       .starboard-container {
         font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
@@ -26,15 +29,32 @@
         grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
         gap: 1rem;
       }
+      .starboard-list {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+      }
+      .starboard-carousel {
+        display: flex;
+        gap: 1rem;
+        overflow-x: auto;
+        scroll-snap-type: x mandatory;
+        -webkit-overflow-scrolling: touch;
+        padding-bottom: 1rem;
+      }
+      .starboard-carousel .starboard-card {
+        min-width: 300px;
+        scroll-snap-align: start;
+      }
       .starboard-card {
-        background: #ffffff;
-        border: 1px solid #e5e7eb;
+        background: ${isDark ? '#1f2937' : '#ffffff'};
+        border: 1px solid ${isDark ? '#374151' : '#e5e7eb'};
         border-radius: 12px;
         padding: 1.5rem;
         transition: box-shadow 0.2s;
       }
       .starboard-card:hover {
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        box-shadow: 0 4px 12px ${isDark ? 'rgba(0,0,0,0.3)' : 'rgba(0,0,0,0.1)'};
       }
       .starboard-stars {
         display: flex;
@@ -44,11 +64,11 @@
       .starboard-star {
         width: 18px;
         height: 18px;
-        fill: #facc15;
-        color: #facc15;
+        fill: ${primaryColor};
+        color: ${primaryColor};
       }
       .starboard-content {
-        color: #374151;
+        color: ${isDark ? '#d1d5db' : '#374151'};
         font-size: 0.95rem;
         line-height: 1.6;
         margin-bottom: 1rem;
@@ -62,7 +82,7 @@
         width: 40px;
         height: 40px;
         border-radius: 50%;
-        background: linear-gradient(135deg, #6366f1, #8b5cf6);
+        background: linear-gradient(135deg, ${primaryColor}, ${adjustColor(primaryColor, 30)});
         display: flex;
         align-items: center;
         justify-content: center;
@@ -72,20 +92,20 @@
       }
       .starboard-name {
         font-weight: 600;
-        color: #111827;
+        color: ${isDark ? '#f3f4f6' : '#111827'};
       }
       .starboard-role {
         font-size: 0.85rem;
-        color: #6b7280;
+        color: ${isDark ? '#9ca3af' : '#6b7280'};
       }
       .starboard-powered {
         text-align: center;
         margin-top: 1.5rem;
         font-size: 0.75rem;
-        color: #9ca3af;
+        color: ${isDark ? '#6b7280' : '#9ca3af'};
       }
       .starboard-powered a {
-        color: #6366f1;
+        color: ${primaryColor};
         text-decoration: none;
       }
       .starboard-powered a:hover {
@@ -94,12 +114,12 @@
       .starboard-empty {
         text-align: center;
         padding: 2rem;
-        color: #6b7280;
+        color: ${isDark ? '#9ca3af' : '#6b7280'};
       }
       .starboard-loading {
         text-align: center;
         padding: 2rem;
-        color: #6b7280;
+        color: ${isDark ? '#9ca3af' : '#6b7280'};
       }
     `;
 
@@ -109,8 +129,23 @@
     document.head.appendChild(styleSheet);
   }
 
-  // 별점 SVG 생성
-  function createStars(rating) {
+  // Adjust color brightness
+  function adjustColor(hex, percent) {
+    const num = parseInt(hex.replace('#', ''), 16);
+    const amt = Math.round(2.55 * percent);
+    const R = (num >> 16) + amt;
+    const G = (num >> 8 & 0x00FF) + amt;
+    const B = (num & 0x0000FF) + amt;
+    return '#' + (
+      0x1000000 +
+      (R < 255 ? (R < 1 ? 0 : R) : 255) * 0x10000 +
+      (G < 255 ? (G < 1 ? 0 : G) : 255) * 0x100 +
+      (B < 255 ? (B < 1 ? 0 : B) : 255)
+    ).toString(16).slice(1);
+  }
+
+  // Create stars SVG
+  function createStars(rating, color) {
     let stars = '';
     for (let i = 0; i < rating; i++) {
       stars += `<svg class="starboard-star" viewBox="0 0 24 24" fill="currentColor">
@@ -120,7 +155,7 @@
     return stars;
   }
 
-  // 후기 카드 생성
+  // Create testimonial card
   function createCard(testimonial) {
     const initial = testimonial.name.charAt(0).toUpperCase();
     const role = [testimonial.role, testimonial.company].filter(Boolean).join(' @ ');
@@ -140,23 +175,32 @@
     `;
   }
 
-  // HTML 이스케이프
+  // Escape HTML
   function escapeHtml(text) {
     const div = document.createElement('div');
     div.textContent = text;
     return div.innerHTML;
   }
 
-  // 위젯 렌더링
+  // Get layout class
+  function getLayoutClass(layout) {
+    switch (layout) {
+      case 'LIST': return 'starboard-list';
+      case 'CAROUSEL': return 'starboard-carousel';
+      default: return 'starboard-grid';
+    }
+  }
+
+  // Render widget
   async function renderWidget(container) {
     const slug = container.dataset.slug;
     
     if (!slug) {
-      container.innerHTML = '<div class="starboard-empty">❌ data-slug 속성이 필요합니다.</div>';
+      container.innerHTML = '<div class="starboard-empty">❌ data-slug attribute required.</div>';
       return;
     }
 
-    container.innerHTML = '<div class="starboard-loading">⏳ 후기를 불러오는 중...</div>';
+    container.innerHTML = '<div class="starboard-loading">⏳ Loading testimonials...</div>';
 
     try {
       const response = await fetch(`${API_BASE}/api/testimonials?slug=${encodeURIComponent(slug)}`);
@@ -167,17 +211,26 @@
 
       const data = await response.json();
       const testimonials = data.testimonials || [];
+      const project = data.project || {};
+      
+      // Apply theme
+      const primaryColor = project.primaryColor || '#6366f1';
+      const theme = project.widgetTheme || 'LIGHT';
+      const layout = project.widgetLayout || 'GRID';
+      
+      injectStyles(primaryColor, theme);
 
       if (testimonials.length === 0) {
-        container.innerHTML = '<div class="starboard-empty">아직 후기가 없습니다. 😢</div>';
+        container.innerHTML = '<div class="starboard-empty">No testimonials yet. 😢</div>';
         return;
       }
 
       const cards = testimonials.map(createCard).join('');
+      const layoutClass = getLayoutClass(layout);
       
       container.innerHTML = `
         <div class="starboard-container">
-          <div class="starboard-grid">${cards}</div>
+          <div class="${layoutClass}">${cards}</div>
           <div class="starboard-powered">
             Powered by <a href="https://starboard.app" target="_blank" rel="noopener">starboard</a> 💜
           </div>
@@ -185,26 +238,24 @@
       `;
     } catch (error) {
       console.error('starboard Widget Error:', error);
-      container.innerHTML = '<div class="starboard-empty">⚠️ 후기를 불러올 수 없습니다.</div>';
+      container.innerHTML = '<div class="starboard-empty">⚠️ Could not load testimonials.</div>';
     }
   }
 
-  // 초기화
+  // Initialize
   function init() {
-    injectStyles();
-
     const containers = document.querySelectorAll(`#${WIDGET_ID}, [data-starboard]`);
     containers.forEach(renderWidget);
   }
 
-  // DOM 준비되면 실행
+  // Run when DOM ready
   if (document.readyState === 'loading') {
     document.addEventListener('DOMContentLoaded', init);
   } else {
     init();
   }
 
-  // 전역 API 노출 (수동 초기화용)
+  // Expose global API
   window.starboard = {
     init: init,
     render: renderWidget,
