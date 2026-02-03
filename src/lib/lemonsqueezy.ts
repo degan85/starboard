@@ -2,6 +2,7 @@ import {
   lemonSqueezySetup,
   createCheckout,
   getSubscription,
+  cancelSubscription,
 } from "@lemonsqueezy/lemonsqueezy.js";
 
 // Initialize Lemon Squeezy
@@ -53,6 +54,13 @@ export async function getSubscriptionDetails(subscriptionId: string) {
   initLemonSqueezy();
   const subscription = await getSubscription(subscriptionId);
   return subscription.data?.data;
+}
+
+// Cancel subscription
+export async function cancelUserSubscription(subscriptionId: string) {
+  initLemonSqueezy();
+  const result = await cancelSubscription(subscriptionId);
+  return result.data?.data;
 }
 
 // Webhook event types

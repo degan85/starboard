@@ -109,6 +109,29 @@ export default function SettingsPage() {
     }
   };
 
+  const handleCancelSubscription = async () => {
+    if (!confirm("Are you sure you want to cancel your subscription? You will lose access to Pro features immediately.")) {
+      return;
+    }
+
+    try {
+      const response = await fetch("/api/payments/cancel", {
+        method: "POST",
+      });
+      const data = await response.json();
+      
+      if (data.success) {
+        alert("Subscription cancelled successfully");
+        window.location.reload();
+      } else {
+        alert(data.error || "Failed to cancel subscription");
+      }
+    } catch (error) {
+      console.error("Failed to cancel subscription:", error);
+      alert("Failed to cancel subscription");
+    }
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
@@ -266,19 +289,19 @@ export default function SettingsPage() {
                       Upgrade to Business
                     </Link>
                     <button
-                      onClick={handleManageBilling}
-                      className="px-4 py-2 border border-gray-200 rounded-lg hover:bg-gray-50 transition text-sm font-medium"
+                      onClick={handleCancelSubscription}
+                      className="px-4 py-2 border border-red-200 text-red-600 rounded-lg hover:bg-red-50 transition text-sm font-medium"
                     >
-                      Manage / Cancel
+                      Cancel Plan
                     </button>
                   </>
                 )}
                 {user.plan === "BUSINESS" && (
                   <button
-                    onClick={handleManageBilling}
-                    className="px-4 py-2 border border-gray-200 rounded-lg hover:bg-gray-50 transition text-sm font-medium"
+                    onClick={handleCancelSubscription}
+                    className="px-4 py-2 border border-red-200 text-red-600 rounded-lg hover:bg-red-50 transition text-sm font-medium"
                   >
-                    Manage / Cancel
+                    Cancel Plan
                   </button>
                 )}
               </div>
