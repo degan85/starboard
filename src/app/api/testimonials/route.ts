@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { z } from "zod";
+import { canAddTestimonial } from "@/lib/plans";
 
 // Validation schema
 const testimonialSchema = z.object({
@@ -19,15 +20,27 @@ export async function POST(request: NextRequest) {
     const body = await request.json();
     const validatedData = testimonialSchema.parse(body);
 
-    // Find project by slug
+    // Find project by slug with user
     const project = await db.project.findUnique({
       where: { slug: validatedData.projectSlug },
+      include: {
+        user: true,
+        _count: { select: { testimonials: true } },
+      },
     });
 
     if (!project) {
       return NextResponse.json(
         { error: "프로젝트를 찾을 수 없습니다." },
         { status: 404 }
+      );
+    }
+
+    // Check plan limits
+    if (!canAddTestimonial(project.user.plan, project._count.testimonials)) {
+      return NextResponse.json(
+        { error: "후기 개수 제한에 도달했습니다. 프로젝트 소유자에게 업그레이드를 요청하세요." },
+        { status: 403 }
       );
     }
 
