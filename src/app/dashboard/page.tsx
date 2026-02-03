@@ -49,6 +49,11 @@ export default function DashboardPage() {
   const [showEmbedCode, setShowEmbedCode] = useState(false);
   const [copied, setCopied] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
+  const [planInfo, setPlanInfo] = useState<{
+    plan: string;
+    limits: { maxProjects: number; maxTestimonials: number };
+    usage: { projectCount: number };
+  } | null>(null);
 
   // Fetch projects
   useEffect(() => {
@@ -60,6 +65,11 @@ export default function DashboardPage() {
       const response = await fetch("/api/projects");
       const data = await response.json();
       setProjects(data.projects || []);
+      setPlanInfo({
+        plan: data.plan || "FREE",
+        limits: data.limits || { maxProjects: 1, maxTestimonials: 10 },
+        usage: data.usage || { projectCount: 0 },
+      });
       if (data.projects?.length > 0) {
         setSelectedProject(data.projects[0]);
         fetchTestimonials(data.projects[0].id);
@@ -165,10 +175,18 @@ export default function DashboardPage() {
             starboard
           </Link>
           <div className="flex items-center gap-4">
-            <span className="text-sm text-gray-500">Free Plan</span>
-            <Link href="/pricing" className="text-sm text-brand-600 hover:underline">
-              Upgrade
-            </Link>
+            <span className={`text-sm px-2 py-1 rounded-full ${
+              planInfo?.plan === "BUSINESS" ? "bg-yellow-100 text-yellow-700" :
+              planInfo?.plan === "PRO" ? "bg-brand-100 text-brand-700" :
+              "bg-gray-100 text-gray-600"
+            }`}>
+              {planInfo?.plan || "Free"} Plan
+            </span>
+            {planInfo?.plan === "FREE" && (
+              <Link href="/pricing" className="text-sm text-brand-600 hover:underline">
+                Upgrade
+              </Link>
+            )}
             <Link href="/settings" className="p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg transition">
               <Settings className="w-5 h-5" />
             </Link>
@@ -183,12 +201,22 @@ export default function DashboardPage() {
             <div className="bg-white rounded-xl shadow-sm p-4">
               <div className="flex items-center justify-between mb-4">
                 <h2 className="font-semibold text-gray-900">Projects</h2>
-                <button
-                  onClick={() => setShowNewProject(true)}
-                  className="p-1.5 rounded-lg hover:bg-gray-100 text-gray-500"
-                >
-                  <Plus className="w-5 h-5" />
-                </button>
+                {planInfo && projects.length >= planInfo.limits.maxProjects ? (
+                  <Link
+                    href="/pricing"
+                    className="text-xs text-brand-600 hover:underline"
+                    title="Upgrade to create more projects"
+                  >
+                    Upgrade
+                  </Link>
+                ) : (
+                  <button
+                    onClick={() => setShowNewProject(true)}
+                    className="p-1.5 rounded-lg hover:bg-gray-100 text-gray-500"
+                  >
+                    <Plus className="w-5 h-5" />
+                  </button>
+                )}
               </div>
 
               {/* New Project Input */}

@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { db } from "@/lib/db";
 import { z } from "zod";
-import { canAddTestimonial } from "@/lib/plans";
+import { canAddTestimonial, getPlanLimits } from "@/lib/plans";
 
 // Validation schema
 const testimonialSchema = z.object({
@@ -31,7 +31,7 @@ export async function POST(request: NextRequest) {
 
     if (!project) {
       return NextResponse.json(
-        { error: "프로젝트를 찾을 수 없습니다." },
+        { error: "Project not found" },
         { status: 404 }
       );
     }
@@ -39,7 +39,7 @@ export async function POST(request: NextRequest) {
     // Check plan limits
     if (!canAddTestimonial(project.user.plan, project._count.testimonials)) {
       return NextResponse.json(
-        { error: "후기 개수 제한에 도달했습니다. 프로젝트 소유자에게 업그레이드를 요청하세요." },
+        { error: "Testimonial limit reached. Please contact the project owner to upgrade." },
         { status: 403 }
       );
     }
@@ -54,7 +54,7 @@ export async function POST(request: NextRequest) {
         role: validatedData.role || null,
         content: validatedData.content,
         rating: validatedData.rating,
-        approved: false, // 기본적으로 승인 대기
+        approved: false,
       },
     });
 
@@ -62,13 +62,13 @@ export async function POST(request: NextRequest) {
   } catch (error) {
     if (error instanceof z.ZodError) {
       return NextResponse.json(
-        { error: "유효하지 않은 데이터입니다.", details: error.errors },
+        { error: "Invalid data", details: error.errors },
         { status: 400 }
       );
     }
     console.error("Error creating testimonial:", error);
     return NextResponse.json(
-      { error: "서버 오류가 발생했습니다." },
+      { error: "Server error" },
       { status: 500 }
     );
   }
@@ -82,7 +82,7 @@ export async function GET(request: NextRequest) {
 
     if (!slug) {
       return NextResponse.json(
-        { error: "프로젝트 slug가 필요합니다." },
+        { error: "Project slug required" },
         { status: 400 }
       );
     }
@@ -90,6 +90,9 @@ export async function GET(request: NextRequest) {
     const project = await db.project.findUnique({
       where: { slug },
       include: {
+        user: {
+          select: { plan: true },
+        },
         testimonials: {
           where: { approved: true },
           orderBy: { createdAt: "desc" },
@@ -99,10 +102,12 @@ export async function GET(request: NextRequest) {
 
     if (!project) {
       return NextResponse.json(
-        { error: "프로젝트를 찾을 수 없습니다." },
+        { error: "Project not found" },
         { status: 404 }
       );
     }
+
+    const planLimits = getPlanLimits(project.user.plan);
 
     // CORS headers for widget
     return NextResponse.json(
@@ -112,6 +117,7 @@ export async function GET(request: NextRequest) {
           widgetTheme: project.widgetTheme,
           widgetLayout: project.widgetLayout,
           primaryColor: project.primaryColor,
+          removeBranding: planLimits.removeBranding,
         },
         testimonials: project.testimonials,
       },
@@ -125,7 +131,7 @@ export async function GET(request: NextRequest) {
   } catch (error) {
     console.error("Error fetching testimonials:", error);
     return NextResponse.json(
-      { error: "서버 오류가 발생했습니다." },
+      { error: "Server error" },
       { status: 500 }
     );
   }

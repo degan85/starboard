@@ -227,13 +227,14 @@
 
       const cards = testimonials.map(createCard).join('');
       const layoutClass = getLayoutClass(layout);
+      const showBranding = !project.removeBranding;
       
       container.innerHTML = `
         <div class="starboard-container">
           <div class="${layoutClass}">${cards}</div>
-          <div class="starboard-powered">
+          ${showBranding ? `<div class="starboard-powered">
             Powered by <a href="https://starboard.app" target="_blank" rel="noopener">starboard</a> 💜
-          </div>
+          </div>` : ''}
         </div>
       `;
     } catch (error) {
