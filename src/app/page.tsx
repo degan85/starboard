@@ -33,7 +33,7 @@ export default function HomePage() {
             3분 만에 시작하세요
           </div>
           
-          <h1 className="text-5xl md:text-6xl font-bold text-gray-900 mb-6 leading-tight">
+          <h1 className="text-3xl sm:text-5xl md:text-6xl font-bold text-gray-900 mb-6 leading-tight">
             고객의 사랑을
             <br />
             <span className="text-brand-600">StarBoard</span>로
