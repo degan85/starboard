@@ -40,13 +40,15 @@ export default function CollectPage({ params }: { params: { slug: string } }) {
         }),
       });
 
+      const data = await response.json();
+
       if (!response.ok) {
-        throw new Error("후기 제출에 실패했습니다.");
+        throw new Error(data.error || "Failed to submit testimonial");
       }
 
       setIsSubmitted(true);
     } catch (err) {
-      setError(err instanceof Error ? err.message : "오류가 발생했습니다.");
+      setError(err instanceof Error ? err.message : "Something went wrong");
     } finally {
       setIsSubmitting(false);
     }
@@ -60,12 +62,12 @@ export default function CollectPage({ params }: { params: { slug: string } }) {
             <CheckCircle className="w-10 h-10 text-green-600" />
           </div>
           <h1 className="text-2xl font-bold text-gray-900 mb-2">
-            감사합니다! 💜
+            Thank you! 💜
           </h1>
           <p className="text-gray-600">
-            소중한 후기가 성공적으로 제출되었습니다.
+            Your testimonial has been submitted successfully.
             <br />
-            검토 후 게시됩니다.
+            It will be displayed after review.
           </p>
         </div>
       </div>
@@ -82,10 +84,10 @@ export default function CollectPage({ params }: { params: { slug: string } }) {
             <span className="font-bold text-lg">starboard</span>
           </div>
           <h1 className="text-2xl font-bold text-gray-900 mb-2">
-            후기를 남겨주세요 ✨
+            Share your experience ✨
           </h1>
           <p className="text-gray-600">
-            여러분의 소중한 경험을 공유해주세요.
+            We'd love to hear about your experience.
           </p>
         </div>
 
@@ -94,7 +96,7 @@ export default function CollectPage({ params }: { params: { slug: string } }) {
           {/* Rating */}
           <div className="mb-6">
             <label className="block text-sm font-medium text-gray-700 mb-2">
-              평점
+              Rating
             </label>
             <div className="flex gap-2">
               {[1, 2, 3, 4, 5].map((star) => (
@@ -119,13 +121,13 @@ export default function CollectPage({ params }: { params: { slug: string } }) {
           {/* Content */}
           <div className="mb-6">
             <label htmlFor="content" className="block text-sm font-medium text-gray-700 mb-2">
-              후기 내용 <span className="text-red-500">*</span>
+              Your testimonial <span className="text-red-500">*</span>
             </label>
             <textarea
               id="content"
               required
               rows={4}
-              placeholder="어떤 점이 좋았나요? 자유롭게 작성해주세요."
+              placeholder="What did you love about it? Share your honest experience."
               value={formData.content}
               onChange={(e) => setFormData({ ...formData, content: e.target.value })}
               className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-brand-500 focus:border-transparent resize-none"
@@ -135,13 +137,13 @@ export default function CollectPage({ params }: { params: { slug: string } }) {
           {/* Name */}
           <div className="mb-4">
             <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-2">
-              이름 <span className="text-red-500">*</span>
+              Your name <span className="text-red-500">*</span>
             </label>
             <input
               type="text"
               id="name"
               required
-              placeholder="홍길동"
+              placeholder="John Doe"
               value={formData.name}
               onChange={(e) => setFormData({ ...formData, name: e.target.value })}
               className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-brand-500 focus:border-transparent"
@@ -151,12 +153,12 @@ export default function CollectPage({ params }: { params: { slug: string } }) {
           {/* Email (optional) */}
           <div className="mb-4">
             <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-2">
-              이메일 <span className="text-gray-400">(선택)</span>
+              Email <span className="text-gray-400">(optional)</span>
             </label>
             <input
               type="email"
               id="email"
-              placeholder="email@example.com"
+              placeholder="john@example.com"
               value={formData.email}
               onChange={(e) => setFormData({ ...formData, email: e.target.value })}
               className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-brand-500 focus:border-transparent"
@@ -167,12 +169,12 @@ export default function CollectPage({ params }: { params: { slug: string } }) {
           <div className="grid grid-cols-2 gap-4 mb-6">
             <div>
               <label htmlFor="company" className="block text-sm font-medium text-gray-700 mb-2">
-                회사/소속 <span className="text-gray-400">(선택)</span>
+                Company <span className="text-gray-400">(optional)</span>
               </label>
               <input
                 type="text"
                 id="company"
-                placeholder="ABC 회사"
+                placeholder="Acme Inc"
                 value={formData.company}
                 onChange={(e) => setFormData({ ...formData, company: e.target.value })}
                 className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-brand-500 focus:border-transparent"
@@ -180,12 +182,12 @@ export default function CollectPage({ params }: { params: { slug: string } }) {
             </div>
             <div>
               <label htmlFor="role" className="block text-sm font-medium text-gray-700 mb-2">
-                직책 <span className="text-gray-400">(선택)</span>
+                Role <span className="text-gray-400">(optional)</span>
               </label>
               <input
                 type="text"
                 id="role"
-                placeholder="마케터"
+                placeholder="Product Manager"
                 value={formData.role}
                 onChange={(e) => setFormData({ ...formData, role: e.target.value })}
                 className="w-full px-4 py-3 border border-gray-200 rounded-xl focus:ring-2 focus:ring-brand-500 focus:border-transparent"
@@ -209,12 +211,12 @@ export default function CollectPage({ params }: { params: { slug: string } }) {
             {isSubmitting ? (
               <>
                 <Loader2 className="w-5 h-5 animate-spin" />
-                제출 중...
+                Submitting...
               </>
             ) : (
               <>
                 <Send className="w-5 h-5" />
-                후기 제출하기
+                Submit Testimonial
               </>
             )}
           </button>

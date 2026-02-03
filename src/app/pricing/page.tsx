@@ -8,12 +8,12 @@ const plans = [
   {
     name: "Free",
     price: "$0",
-    description: "시작하기 좋은",
+    description: "Perfect to start",
     features: [
-      "프로젝트 1개",
-      "후기 10개",
-      "기본 위젯",
-      "starboard 브랜딩",
+      "1 project",
+      "10 testimonials",
+      "Basic widget",
+      "starboard branding",
     ],
     plan: "FREE",
     popular: false,
@@ -21,12 +21,12 @@ const plans = [
   {
     name: "Pro",
     price: "$9",
-    description: "성장하는 비즈니스",
+    description: "For growing businesses",
     features: [
-      "프로젝트 3개",
-      "후기 무제한",
-      "커스텀 색상",
-      "브랜딩 제거",
+      "3 projects",
+      "Unlimited testimonials",
+      "Custom colors",
+      "Remove branding",
     ],
     plan: "PRO",
     popular: true,
@@ -34,12 +34,12 @@ const plans = [
   {
     name: "Business",
     price: "$29",
-    description: "모든 것을 원한다면",
+    description: "For serious teams",
     features: [
-      "프로젝트 무제한",
-      "영상 후기",
-      "커스텀 도메인",
-      "우선 지원",
+      "Unlimited projects",
+      "Video testimonials",
+      "Custom domain",
+      "Priority support",
     ],
     plan: "BUSINESS",
     popular: false,
@@ -66,11 +66,11 @@ export default function PricingPage() {
       if (data.url) {
         window.location.href = data.url;
       } else {
-        alert(data.error || "오류가 발생했습니다.");
+        alert(data.error || "Something went wrong");
       }
     } catch (error) {
       console.error("Upgrade error:", error);
-      alert("오류가 발생했습니다.");
+      alert("Something went wrong");
     } finally {
       setLoading(null);
     }
@@ -83,7 +83,7 @@ export default function PricingPage() {
         <div className="text-center mb-12">
           <Link href="/dashboard" className="inline-flex items-center gap-2 text-gray-600 hover:text-gray-900 mb-6">
             <ArrowLeft className="w-4 h-4" />
-            대시보드로 돌아가기
+            Back to Dashboard
           </Link>
           
           <div className="flex items-center justify-center gap-2 text-brand-600 mb-4">
@@ -92,10 +92,10 @@ export default function PricingPage() {
           </div>
           
           <h1 className="text-3xl font-bold text-gray-900 mb-4">
-            플랜 업그레이드
+            Upgrade your plan
           </h1>
           <p className="text-gray-600">
-            더 많은 기능이 필요하신가요? 딱 맞는 플랜을 선택하세요.
+            Need more features? Choose the plan that's right for you.
           </p>
         </div>
 
@@ -112,7 +112,7 @@ export default function PricingPage() {
             >
               {plan.popular && (
                 <div className="text-brand-200 text-sm font-medium mb-2">
-                  가장 인기
+                  Most Popular
                 </div>
               )}
               <h3 className="text-xl font-bold mb-1">{plan.name}</h3>
@@ -122,7 +122,7 @@ export default function PricingPage() {
               <div className="my-4">
                 <span className="text-4xl font-bold">{plan.price}</span>
                 <span className={plan.popular ? "text-brand-200" : "text-gray-500"}>
-                  /월
+                  /mo
                 </span>
               </div>
               <ul className="space-y-3 mb-6">
@@ -147,12 +147,12 @@ export default function PricingPage() {
                 {loading === plan.plan ? (
                   <>
                     <Loader2 className="w-5 h-5 animate-spin" />
-                    처리 중...
+                    Processing...
                   </>
                 ) : plan.plan === "FREE" ? (
-                  "현재 플랜"
+                  "Current Plan"
                 ) : (
-                  `${plan.name} 시작하기`
+                  `Start ${plan.name}`
                 )}
               </button>
             </div>
@@ -161,15 +161,15 @@ export default function PricingPage() {
 
         {/* FAQ */}
         <div className="mt-16 text-center">
-          <h2 className="text-xl font-bold text-gray-900 mb-4">자주 묻는 질문</h2>
+          <h2 className="text-xl font-bold text-gray-900 mb-4">FAQ</h2>
           <div className="space-y-4 text-left max-w-2xl mx-auto">
             <div className="bg-white p-4 rounded-lg border border-gray-200">
-              <h3 className="font-semibold text-gray-900 mb-2">언제든 취소할 수 있나요?</h3>
-              <p className="text-gray-600 text-sm">네, 언제든 취소 가능합니다. 취소 후에도 결제 기간이 끝날 때까지 사용할 수 있어요.</p>
+              <h3 className="font-semibold text-gray-900 mb-2">Can I cancel anytime?</h3>
+              <p className="text-gray-600 text-sm">Yes, you can cancel at any time. You'll keep access until the end of your billing period.</p>
             </div>
             <div className="bg-white p-4 rounded-lg border border-gray-200">
-              <h3 className="font-semibold text-gray-900 mb-2">환불 정책은 어떻게 되나요?</h3>
-              <p className="text-gray-600 text-sm">구매 후 7일 이내 100% 환불해드립니다. 질문 없이요.</p>
+              <h3 className="font-semibold text-gray-900 mb-2">What's your refund policy?</h3>
+              <p className="text-gray-600 text-sm">Full refund within 7 days of purchase. No questions asked.</p>
             </div>
           </div>
         </div>

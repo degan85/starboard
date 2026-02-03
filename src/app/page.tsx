@@ -13,13 +13,13 @@ export default function HomePage() {
           </Link>
           <div className="flex items-center gap-4">
             <Link href="/login" className="text-gray-600 hover:text-gray-900">
-              로그인
+              Sign In
             </Link>
             <Link
               href="/login"
               className="bg-brand-600 text-white px-4 py-2 rounded-lg hover:bg-brand-700 transition"
             >
-              무료로 시작하기
+              Get Started Free
             </Link>
           </div>
         </div>
@@ -30,19 +30,18 @@ export default function HomePage() {
         <div className="max-w-4xl mx-auto text-center">
           <div className="inline-flex items-center gap-2 bg-brand-100 text-brand-700 px-4 py-2 rounded-full text-sm font-medium mb-6">
             <Zap className="w-4 h-4" />
-            3분 만에 시작하세요
+            Setup in 3 minutes
           </div>
           
           <h1 className="text-3xl sm:text-5xl md:text-6xl font-bold text-gray-900 mb-6 leading-tight">
-            고객의 사랑을
+            Collect & Display
             <br />
-            <span className="text-brand-600">StarBoard</span>로
+            <span className="text-brand-600">Customer Love</span>
           </h1>
           
           <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
-            고객 후기를 쉽게 수집하고, 웹사이트에 예쁜 위젯으로 전시하세요.
-            <br />
-            전환율을 높이는 가장 쉬운 방법입니다.
+            Easily collect testimonials from your customers and showcase them 
+            beautifully on your website. The easiest way to boost conversions.
           </p>
           
           <div className="flex flex-col sm:flex-row gap-4 justify-center">
@@ -50,19 +49,19 @@ export default function HomePage() {
               href="/login"
               className="inline-flex items-center justify-center gap-2 bg-brand-600 text-white px-8 py-4 rounded-xl text-lg font-semibold hover:bg-brand-700 transition shadow-lg shadow-brand-500/25"
             >
-              무료로 시작하기
+              Get Started Free
               <ArrowRight className="w-5 h-5" />
             </Link>
             <Link
               href="#demo"
               className="inline-flex items-center justify-center gap-2 bg-white text-gray-700 px-8 py-4 rounded-xl text-lg font-semibold hover:bg-gray-50 transition border border-gray-200"
             >
-              데모 보기
+              See Demo
             </Link>
           </div>
           
           <p className="text-sm text-gray-500 mt-4">
-            신용카드 필요 없음 • 무료 플랜 영구 제공
+            No credit card required • Free plan forever
           </p>
         </div>
       </section>
@@ -71,31 +70,31 @@ export default function HomePage() {
       <section id="demo" className="py-20 px-4 bg-white">
         <div className="max-w-6xl mx-auto">
           <h2 className="text-3xl font-bold text-center mb-4">
-            이렇게 보여요 ✨
+            See it in action ✨
           </h2>
           <p className="text-gray-600 text-center mb-12">
-            실제 위젯 미리보기
+            Real widget preview
           </p>
           
           {/* Sample Widget */}
           <div className="grid md:grid-cols-3 gap-6 max-w-4xl mx-auto">
             {[
               {
-                name: "김지영",
-                role: "프리랜서 디자이너",
-                content: "정말 간편해요! 고객들한테 링크만 보내면 후기가 쏙쏙 들어와요. 포트폴리오 사이트가 훨씬 신뢰감 있어 보여요.",
+                name: "Sarah Johnson",
+                role: "Freelance Designer",
+                content: "So simple! I just send the link to clients and testimonials roll in. My portfolio looks so much more trustworthy now.",
                 rating: 5,
               },
               {
-                name: "이준혁",
-                role: "스마트스토어 운영",
-                content: "매출이 20% 올랐어요. 방문자들이 실제 고객 후기 보고 구매 결정을 바로 하더라구요.",
+                name: "Mike Chen",
+                role: "E-commerce Owner",
+                content: "Sales increased by 20%. Visitors see real customer reviews and make purchase decisions instantly.",
                 rating: 5,
               },
               {
-                name: "박서연",
-                role: "온라인 강사",
-                content: "수강생 후기 모으기 진짜 편해요. 코드 한 줄로 노션 페이지에도 바로 넣었어요!",
+                name: "Emma Williams",
+                role: "Course Creator",
+                content: "Collecting student testimonials is so easy. One line of code and it's on my landing page!",
                 rating: 5,
               },
             ].map((testimonial, i) => (
@@ -129,28 +128,28 @@ export default function HomePage() {
       <section className="py-20 px-4 bg-gray-50">
         <div className="max-w-4xl mx-auto">
           <h2 className="text-3xl font-bold text-center mb-4">
-            이렇게 간단해요
+            Dead simple setup
           </h2>
           <p className="text-gray-600 text-center mb-12">
-            3단계로 끝!
+            3 steps and you're done!
           </p>
           
           <div className="grid md:grid-cols-3 gap-8">
             {[
               {
                 step: "1",
-                title: "프로젝트 생성",
-                description: "회원가입하고 프로젝트 이름만 입력하세요.",
+                title: "Create Project",
+                description: "Sign up and enter your project name.",
               },
               {
                 step: "2",
-                title: "링크 공유",
-                description: "생성된 후기 수집 링크를 고객에게 보내세요.",
+                title: "Share Link",
+                description: "Send the collection link to your customers.",
               },
               {
                 step: "3",
-                title: "위젯 설치",
-                description: "코드 한 줄 복사해서 웹사이트에 붙여넣으세요.",
+                title: "Embed Widget",
+                description: "Copy one line of code to your website.",
               },
             ].map((item, i) => (
               <div key={i} className="text-center">
@@ -169,30 +168,30 @@ export default function HomePage() {
       <section className="py-20 px-4 bg-white">
         <div className="max-w-4xl mx-auto">
           <h2 className="text-3xl font-bold text-center mb-12">
-            왜 starboard인가요?
+            Why starboard?
           </h2>
           
           <div className="grid md:grid-cols-2 gap-6">
             {[
               {
                 icon: Zap,
-                title: "초간단 설정",
-                description: "코딩 몰라도 OK. 3분이면 시작할 수 있어요.",
+                title: "Super Easy Setup",
+                description: "No coding required. Get started in 3 minutes.",
               },
               {
                 icon: Heart,
-                title: "예쁜 디자인",
-                description: "어떤 웹사이트에도 어울리는 깔끔한 위젯.",
+                title: "Beautiful Design",
+                description: "Clean widgets that look great on any website.",
               },
               {
                 icon: Star,
-                title: "텍스트 + 별점",
-                description: "고객이 쉽게 후기를 남길 수 있어요.",
+                title: "Text + Star Ratings",
+                description: "Make it easy for customers to leave reviews.",
               },
               {
                 icon: Code,
-                title: "어디서나 사용",
-                description: "HTML, 노션, 워드프레스, 쇼피파이 등 어디든!",
+                title: "Works Everywhere",
+                description: "HTML, Notion, WordPress, Shopify, and more!",
               },
             ].map((feature, i) => (
               <div key={i} className="flex gap-4 p-6 rounded-xl border border-gray-100 hover:border-brand-200 transition">
@@ -213,10 +212,10 @@ export default function HomePage() {
       <section className="py-20 px-4 bg-gray-50">
         <div className="max-w-4xl mx-auto">
           <h2 className="text-3xl font-bold text-center mb-4">
-            심플한 가격
+            Simple Pricing
           </h2>
           <p className="text-gray-600 text-center mb-12">
-            무료로 시작하고, 필요할 때 업그레이드하세요.
+            Start free, upgrade when you need more.
           </p>
           
           <div className="grid md:grid-cols-3 gap-6">
@@ -224,40 +223,40 @@ export default function HomePage() {
               {
                 name: "Free",
                 price: "$0",
-                description: "시작하기 좋은",
+                description: "Perfect to start",
                 features: [
-                  "프로젝트 1개",
-                  "후기 10개",
-                  "기본 위젯",
-                  "starboard 브랜딩",
+                  "1 project",
+                  "10 testimonials",
+                  "Basic widget",
+                  "starboard branding",
                 ],
-                cta: "무료로 시작",
+                cta: "Get Started",
                 popular: false,
               },
               {
                 name: "Pro",
                 price: "$9",
-                description: "성장하는 비즈니스",
+                description: "For growing businesses",
                 features: [
-                  "프로젝트 3개",
-                  "후기 무제한",
-                  "커스텀 색상",
-                  "브랜딩 제거",
+                  "3 projects",
+                  "Unlimited testimonials",
+                  "Custom colors",
+                  "Remove branding",
                 ],
-                cta: "Pro 시작하기",
+                cta: "Start Pro",
                 popular: true,
               },
               {
                 name: "Business",
                 price: "$29",
-                description: "모든 것을 원한다면",
+                description: "For serious teams",
                 features: [
-                  "프로젝트 무제한",
-                  "영상 후기",
-                  "커스텀 도메인",
-                  "우선 지원",
+                  "Unlimited projects",
+                  "Video testimonials",
+                  "Custom domain",
+                  "Priority support",
                 ],
-                cta: "Business 시작",
+                cta: "Start Business",
                 popular: false,
               },
             ].map((plan, i) => (
@@ -271,7 +270,7 @@ export default function HomePage() {
               >
                 {plan.popular && (
                   <div className="text-brand-200 text-sm font-medium mb-2">
-                    가장 인기
+                    Most Popular
                   </div>
                 )}
                 <h3 className="text-xl font-bold mb-1">{plan.name}</h3>
@@ -281,7 +280,7 @@ export default function HomePage() {
                 <div className="my-4">
                   <span className="text-4xl font-bold">{plan.price}</span>
                   <span className={plan.popular ? "text-brand-200" : "text-gray-500"}>
-                    /월
+                    /mo
                   </span>
                 </div>
                 <ul className="space-y-3 mb-6">
@@ -312,16 +311,16 @@ export default function HomePage() {
       <section className="py-20 px-4 bg-brand-600">
         <div className="max-w-2xl mx-auto text-center text-white">
           <h2 className="text-3xl font-bold mb-4">
-            지금 바로 시작하세요
+            Start collecting testimonials today
           </h2>
           <p className="text-brand-100 mb-8">
-            5분이면 첫 번째 후기를 받을 수 있어요.
+            Get your first testimonial in under 5 minutes.
           </p>
           <Link
             href="/login"
             className="inline-flex items-center gap-2 bg-white text-brand-600 px-8 py-4 rounded-xl text-lg font-semibold hover:bg-brand-50 transition"
           >
-            무료로 시작하기
+            Get Started Free
             <ArrowRight className="w-5 h-5" />
           </Link>
         </div>

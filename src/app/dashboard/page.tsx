@@ -13,7 +13,6 @@ import {
   Copy,
   Loader2,
   MessageSquare,
-  Settings,
 } from "lucide-react";
 
 // Types
@@ -153,7 +152,7 @@ export default function DashboardPage() {
           <div className="flex items-center gap-4">
             <span className="text-sm text-gray-500">Free Plan</span>
             <Link href="/pricing" className="text-sm text-brand-600 hover:underline">
-              업그레이드
+              Upgrade
             </Link>
           </div>
         </div>
@@ -165,7 +164,7 @@ export default function DashboardPage() {
           <aside className="w-full md:w-64 flex-shrink-0">
             <div className="bg-white rounded-xl shadow-sm p-4">
               <div className="flex items-center justify-between mb-4">
-                <h2 className="font-semibold text-gray-900">프로젝트</h2>
+                <h2 className="font-semibold text-gray-900">Projects</h2>
                 <button
                   onClick={() => setShowNewProject(true)}
                   className="p-1.5 rounded-lg hover:bg-gray-100 text-gray-500"
@@ -179,7 +178,7 @@ export default function DashboardPage() {
                 <div className="mb-4 p-3 bg-gray-50 rounded-lg">
                   <input
                     type="text"
-                    placeholder="프로젝트 이름"
+                    placeholder="Project name"
                     value={newProjectName}
                     onChange={(e) => setNewProjectName(e.target.value)}
                     onKeyDown={(e) => e.key === "Enter" && createProject()}
@@ -191,13 +190,13 @@ export default function DashboardPage() {
                       onClick={createProject}
                       className="flex-1 bg-brand-600 text-white text-sm py-1.5 rounded-lg"
                     >
-                      생성
+                      Create
                     </button>
                     <button
                       onClick={() => setShowNewProject(false)}
                       className="flex-1 bg-gray-200 text-gray-700 text-sm py-1.5 rounded-lg"
                     >
-                      취소
+                      Cancel
                     </button>
                   </div>
                 </div>
@@ -220,7 +219,7 @@ export default function DashboardPage() {
                     >
                       <div className="font-medium truncate">{project.name}</div>
                       <div className="text-xs text-gray-500">
-                        {project._count?.testimonials || 0}개 후기
+                        {project._count?.testimonials || 0} testimonials
                       </div>
                     </button>
                   </li>
@@ -229,13 +228,13 @@ export default function DashboardPage() {
 
               {projects.length === 0 && !showNewProject && (
                 <p className="text-sm text-gray-500 text-center py-4">
-                  프로젝트가 없습니다.
+                  No projects yet.
                   <br />
                   <button
                     onClick={() => setShowNewProject(true)}
                     className="text-brand-600 hover:underline"
                   >
-                    첫 프로젝트 만들기
+                    Create your first project
                   </button>
                 </p>
               )}
@@ -263,7 +262,7 @@ export default function DashboardPage() {
                         className="flex items-center gap-2 px-4 py-2 bg-brand-600 text-white rounded-lg hover:bg-brand-700 transition text-sm md:text-base"
                       >
                         <Code className="w-4 h-4" />
-                        위젯 코드
+                        Embed Code
                       </button>
                     </div>
                   </div>
@@ -271,7 +270,7 @@ export default function DashboardPage() {
                   {/* Collect Link */}
                   <div className="mt-4 p-4 bg-gray-50 rounded-lg">
                     <p className="text-sm font-medium text-gray-700 mb-2">
-                      📮 후기 수집 링크
+                      📮 Collection Link
                     </p>
                     <div className="flex gap-2">
                       <input
@@ -290,7 +289,7 @@ export default function DashboardPage() {
                       </a>
                     </div>
                     <p className="text-xs text-gray-500 mt-2">
-                      이 링크를 고객에게 보내서 후기를 받으세요.
+                      Share this link with your customers to collect testimonials.
                     </p>
                   </div>
 
@@ -299,7 +298,7 @@ export default function DashboardPage() {
                     <div className="mt-4 p-4 bg-gray-900 rounded-lg">
                       <div className="flex items-center justify-between mb-2">
                         <p className="text-sm font-medium text-gray-300">
-                          임베드 코드
+                          Embed Code
                         </p>
                         <button
                           onClick={copyEmbedCode}
@@ -308,12 +307,12 @@ export default function DashboardPage() {
                           {copied ? (
                             <>
                               <Check className="w-4 h-4" />
-                              복사됨!
+                              Copied!
                             </>
                           ) : (
                             <>
                               <Copy className="w-4 h-4" />
-                              복사
+                              Copy
                             </>
                           )}
                         </button>
@@ -330,7 +329,7 @@ export default function DashboardPage() {
                 <div className="bg-white rounded-xl shadow-sm">
                   <div className="p-4 border-b border-gray-100">
                     <h2 className="font-semibold text-gray-900">
-                      후기 목록 ({testimonials.length})
+                      Testimonials ({testimonials.length})
                     </h2>
                   </div>
 
@@ -338,9 +337,9 @@ export default function DashboardPage() {
                     <div className="p-12 text-center">
                       <MessageSquare className="w-12 h-12 text-gray-300 mx-auto mb-4" />
                       <p className="text-gray-500">
-                        아직 후기가 없습니다.
+                        No testimonials yet.
                         <br />
-                        수집 링크를 고객에게 공유해보세요!
+                        Share your collection link to get started!
                       </p>
                     </div>
                   ) : (
@@ -360,7 +359,7 @@ export default function DashboardPage() {
                                 )}
                                 {!testimonial.approved && (
                                   <span className="px-2 py-0.5 bg-yellow-100 text-yellow-700 text-xs rounded-full">
-                                    승인 대기
+                                    Pending
                                   </span>
                                 )}
                               </div>
@@ -371,7 +370,7 @@ export default function DashboardPage() {
                               </div>
                               <p className="text-gray-700">{testimonial.content}</p>
                               <p className="text-xs text-gray-400 mt-2">
-                                {new Date(testimonial.createdAt).toLocaleDateString("ko-KR")}
+                                {new Date(testimonial.createdAt).toLocaleDateString("en-US")}
                               </p>
                             </div>
                             <div className="flex gap-2 ml-4">
@@ -379,7 +378,7 @@ export default function DashboardPage() {
                                 <button
                                   onClick={() => updateTestimonialStatus(testimonial.id, true)}
                                   className="p-2 bg-green-100 text-green-600 rounded-lg hover:bg-green-200"
-                                  title="승인"
+                                  title="Approve"
                                 >
                                   <Check className="w-4 h-4" />
                                 </button>
@@ -387,7 +386,7 @@ export default function DashboardPage() {
                                 <button
                                   onClick={() => updateTestimonialStatus(testimonial.id, false)}
                                   className="p-2 bg-gray-100 text-gray-600 rounded-lg hover:bg-gray-200"
-                                  title="승인 취소"
+                                  title="Unapprove"
                                 >
                                   <X className="w-4 h-4" />
                                 </button>
@@ -404,17 +403,17 @@ export default function DashboardPage() {
               <div className="bg-white rounded-xl shadow-sm p-12 text-center">
                 <Heart className="w-16 h-16 text-brand-200 mx-auto mb-4" />
                 <h2 className="text-xl font-semibold text-gray-900 mb-2">
-                  첫 프로젝트를 만들어보세요!
+                  Create your first project
                 </h2>
                 <p className="text-gray-500 mb-6">
-                  프로젝트를 생성하고 고객 후기를 수집하세요.
+                  Start collecting testimonials from your customers.
                 </p>
                 <button
                   onClick={() => setShowNewProject(true)}
                   className="inline-flex items-center gap-2 bg-brand-600 text-white px-6 py-3 rounded-xl font-semibold hover:bg-brand-700 transition"
                 >
                   <Plus className="w-5 h-5" />
-                  새 프로젝트 만들기
+                  New Project
                 </button>
               </div>
             )}

@@ -6,14 +6,14 @@ import { Providers } from "@/components/providers";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "starboard - 고객 후기를 수집하고 전시하세요",
+  title: "starboard - Collect & Display Customer Testimonials",
   description:
-    "3분 만에 후기 수집 페이지 생성, 1줄 코드로 웹사이트에 임베드. 고객의 별점 후기를 StarBoard로 보여주세요.",
-  keywords: ["testimonial", "review", "widget", "후기", "리뷰", "위젯"],
+    "Easily collect testimonials from your customers and showcase them beautifully on your website. Setup in 3 minutes, embed with one line of code.",
+  keywords: ["testimonial", "review", "widget", "social proof", "customer feedback"],
   authors: [{ name: "starboard" }],
   openGraph: {
-    title: "starboard - 고객 후기 수집 & 전시 위젯",
-    description: "고객의 사랑을 수집하고 예쁘게 전시하세요",
+    title: "starboard - Collect & Display Customer Testimonials",
+    description: "The easiest way to collect and showcase customer love",
     type: "website",
   },
 };
@@ -24,7 +24,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="ko">
+    <html lang="en">
       <body className={inter.className}>
         <Providers>{children}</Providers>
       </body>
