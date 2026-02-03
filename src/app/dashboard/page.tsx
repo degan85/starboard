@@ -271,20 +271,28 @@ export default function DashboardPage() {
                         slug: {selectedProject.slug}
                       </p>
                     </div>
-                    <div className="flex gap-2">
+                    <div className="flex flex-wrap gap-2">
                       <button
                         onClick={() => setShowSettings(true)}
-                        className="flex items-center gap-2 px-4 py-2 border border-gray-200 rounded-lg hover:bg-gray-50 transition text-sm md:text-base"
+                        className="flex items-center gap-2 px-4 py-2 border border-gray-200 rounded-lg hover:bg-gray-50 transition text-sm"
                       >
                         <Settings className="w-4 h-4" />
                         Settings
                       </button>
+                      <Link
+                        href={`/preview/${selectedProject.slug}`}
+                        target="_blank"
+                        className="flex items-center gap-2 px-4 py-2 border border-gray-200 rounded-lg hover:bg-gray-50 transition text-sm"
+                      >
+                        <ExternalLink className="w-4 h-4" />
+                        Preview
+                      </Link>
                       <button
                         onClick={() => setShowEmbedCode(!showEmbedCode)}
-                        className="flex items-center gap-2 px-4 py-2 bg-brand-600 text-white rounded-lg hover:bg-brand-700 transition text-sm md:text-base"
+                        className="flex items-center gap-2 px-4 py-2 bg-brand-600 text-white rounded-lg hover:bg-brand-700 transition text-sm"
                       >
                         <Code className="w-4 h-4" />
-                        Embed Code
+                        Embed
                       </button>
                     </div>
                   </div>
