@@ -160,9 +160,9 @@ export default function DashboardPage() {
       </header>
 
       <div className="max-w-7xl mx-auto px-4 py-8">
-        <div className="flex gap-8">
+        <div className="flex flex-col md:flex-row gap-6 md:gap-8">
           {/* Sidebar - Projects */}
-          <aside className="w-64 flex-shrink-0">
+          <aside className="w-full md:w-64 flex-shrink-0">
             <div className="bg-white rounded-xl shadow-sm p-4">
               <div className="flex items-center justify-between mb-4">
                 <h2 className="font-semibold text-gray-900">프로젝트</h2>
@@ -247,20 +247,20 @@ export default function DashboardPage() {
             {selectedProject ? (
               <>
                 {/* Project Header */}
-                <div className="bg-white rounded-xl shadow-sm p-6 mb-6">
-                  <div className="flex items-start justify-between">
+                <div className="bg-white rounded-xl shadow-sm p-4 md:p-6 mb-6">
+                  <div className="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-4">
                     <div>
-                      <h1 className="text-2xl font-bold text-gray-900 mb-2">
+                      <h1 className="text-xl md:text-2xl font-bold text-gray-900 mb-2">
                         {selectedProject.name}
                       </h1>
-                      <p className="text-gray-500 text-sm">
+                      <p className="text-gray-500 text-sm break-all">
                         slug: {selectedProject.slug}
                       </p>
                     </div>
                     <div className="flex gap-2">
                       <button
                         onClick={() => setShowEmbedCode(!showEmbedCode)}
-                        className="flex items-center gap-2 px-4 py-2 bg-brand-600 text-white rounded-lg hover:bg-brand-700 transition"
+                        className="flex items-center gap-2 px-4 py-2 bg-brand-600 text-white rounded-lg hover:bg-brand-700 transition text-sm md:text-base"
                       >
                         <Code className="w-4 h-4" />
                         위젯 코드
@@ -278,13 +278,13 @@ export default function DashboardPage() {
                         type="text"
                         readOnly
                         value={getCollectUrl()}
-                        className="flex-1 px-3 py-2 bg-white border border-gray-200 rounded-lg text-sm"
+                        className="flex-1 min-w-0 px-3 py-2 bg-white border border-gray-200 rounded-lg text-sm truncate"
                       />
                       <a
                         href={getCollectUrl()}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="px-4 py-2 bg-gray-200 rounded-lg hover:bg-gray-300 transition"
+                        className="flex-shrink-0 px-4 py-2 bg-gray-200 rounded-lg hover:bg-gray-300 transition"
                       >
                         <ExternalLink className="w-4 h-4" />
                       </a>
