@@ -169,6 +169,9 @@ export default function DashboardPage() {
             <Link href="/pricing" className="text-sm text-brand-600 hover:underline">
               Upgrade
             </Link>
+            <Link href="/settings" className="p-2 text-gray-500 hover:text-gray-700 hover:bg-gray-100 rounded-lg transition">
+              <Settings className="w-5 h-5" />
+            </Link>
           </div>
         </div>
       </header>
