@@ -22,7 +22,7 @@ interface UserData {
   email: string;
   image: string | null;
   plan: "FREE" | "PRO" | "BUSINESS";
-  stripeCurrentPeriodEnd: string | null;
+  lsCurrentPeriodEnd: string | null;
   createdAt: string;
   _count: { projects: number };
   testimonialCount: number;
@@ -240,29 +240,48 @@ export default function SettingsPage() {
                 </div>
                 <div>
                   <p className="font-semibold text-gray-900">{plan.name} Plan</p>
-                  {user.stripeCurrentPeriodEnd && (
+                  {user.lsCurrentPeriodEnd && (
                     <p className="text-sm text-gray-500">
-                      Renews on {new Date(user.stripeCurrentPeriodEnd).toLocaleDateString()}
+                      Renews on {new Date(user.lsCurrentPeriodEnd).toLocaleDateString()}
                     </p>
                   )}
                 </div>
               </div>
               
-              {user.plan === "FREE" ? (
-                <Link
-                  href="/pricing"
-                  className="px-4 py-2 bg-brand-600 text-white rounded-lg hover:bg-brand-700 transition text-sm font-medium"
-                >
-                  Upgrade Plan
-                </Link>
-              ) : (
-                <button
-                  onClick={handleManageBilling}
-                  className="px-4 py-2 border border-gray-200 rounded-lg hover:bg-gray-50 transition text-sm font-medium"
-                >
-                  Manage Billing
-                </button>
-              )}
+              <div className="flex flex-wrap gap-2">
+                {user.plan === "FREE" && (
+                  <Link
+                    href="/pricing"
+                    className="px-4 py-2 bg-brand-600 text-white rounded-lg hover:bg-brand-700 transition text-sm font-medium"
+                  >
+                    Upgrade to Pro
+                  </Link>
+                )}
+                {user.plan === "PRO" && (
+                  <>
+                    <Link
+                      href="/pricing"
+                      className="px-4 py-2 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600 transition text-sm font-medium"
+                    >
+                      Upgrade to Business
+                    </Link>
+                    <button
+                      onClick={handleManageBilling}
+                      className="px-4 py-2 border border-gray-200 rounded-lg hover:bg-gray-50 transition text-sm font-medium"
+                    >
+                      Manage / Cancel
+                    </button>
+                  </>
+                )}
+                {user.plan === "BUSINESS" && (
+                  <button
+                    onClick={handleManageBilling}
+                    className="px-4 py-2 border border-gray-200 rounded-lg hover:bg-gray-50 transition text-sm font-medium"
+                  >
+                    Manage / Cancel
+                  </button>
+                )}
+              </div>
             </div>
 
             {/* Usage Stats */}

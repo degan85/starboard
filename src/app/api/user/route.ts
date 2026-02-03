@@ -20,7 +20,8 @@ export async function GET(request: NextRequest) {
         email: true,
         image: true,
         plan: true,
-        stripeCurrentPeriodEnd: true,
+        lsCurrentPeriodEnd: true,
+        lsSubscriptionId: true,
         createdAt: true,
         _count: {
           select: { projects: true },
