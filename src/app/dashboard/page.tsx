@@ -152,9 +152,9 @@ export default function DashboardPage() {
           </Link>
           <div className="flex items-center gap-4">
             <span className="text-sm text-gray-500">Free Plan</span>
-            <button className="text-sm text-brand-600 hover:underline">
+            <Link href="/pricing" className="text-sm text-brand-600 hover:underline">
               업그레이드
-            </button>
+            </Link>
           </div>
         </div>
       </header>
