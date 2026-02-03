@@ -1,29 +1,12 @@
 import Link from "next/link";
 import { Heart, Star, Zap, Code, ArrowRight, Check } from "lucide-react";
+import Navbar from "@/components/Navbar";
 
 export default function HomePage() {
   return (
     <div className="min-h-screen bg-gradient-to-b from-brand-50 to-white">
       {/* Navigation */}
-      <nav className="fixed top-0 w-full bg-white/80 backdrop-blur-md border-b border-gray-100 z-50">
-        <div className="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
-          <Link href="/" className="flex items-center gap-2 text-xl font-bold text-brand-600">
-            <Heart className="w-6 h-6 fill-brand-500" />
-            starboard
-          </Link>
-          <div className="flex items-center gap-4">
-            <Link href="/login" className="text-gray-600 hover:text-gray-900">
-              Sign In
-            </Link>
-            <Link
-              href="/login"
-              className="bg-brand-600 text-white px-4 py-2 rounded-lg hover:bg-brand-700 transition"
-            >
-              Get Started Free
-            </Link>
-          </div>
-        </div>
-      </nav>
+      <Navbar />
 
       {/* Hero Section */}
       <section className="pt-32 pb-20 px-4">
