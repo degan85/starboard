@@ -58,6 +58,14 @@ model User {
   
   // Subscription
   plan          Plan      @default(FREE)
+  
+  // Lemon Squeezy
+  lsCustomerId       String?   @unique
+  lsSubscriptionId   String?   @unique
+  lsVariantId        String?
+  lsCurrentPeriodEnd DateTime?
+  
+  // Legacy Stripe (can be removed later)
   stripeCustomerId    String?   @unique
   stripeSubscriptionId String?  @unique
   stripePriceId       String?

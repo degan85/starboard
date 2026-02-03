@@ -55,7 +55,7 @@ export default function PricingPage() {
     setLoading(plan);
     
     try {
-      const response = await fetch("/api/stripe/checkout", {
+      const response = await fetch("/api/payments/checkout", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ plan }),

@@ -95,12 +95,14 @@ export default function SettingsPage() {
 
   const handleManageBilling = async () => {
     try {
-      const response = await fetch("/api/stripe/portal", {
+      const response = await fetch("/api/payments/portal", {
         method: "POST",
       });
       const data = await response.json();
       if (data.url) {
         window.location.href = data.url;
+      } else {
+        alert(data.error || "Failed to open billing portal");
       }
     } catch (error) {
       console.error("Failed to open billing portal:", error);
