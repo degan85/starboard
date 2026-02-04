@@ -32,8 +32,7 @@ export async function POST(request: NextRequest) {
     }
 
     switch (eventName) {
-      case "subscription_created":
-      case "subscription_updated": {
+      case "subscription_created": {
         const { attributes } = event.data;
         const plan = VARIANT_TO_PLAN[attributes.variant_id] || "FREE";
         
@@ -45,15 +44,41 @@ export async function POST(request: NextRequest) {
             lsSubscriptionId: event.data.id,
             lsVariantId: String(attributes.variant_id),
             lsCurrentPeriodEnd: attributes.renews_at ? new Date(attributes.renews_at) : null,
+            lsCancelledAt: null, // Clear any previous cancellation
           },
         });
         
-        console.log(`User ${userId} upgraded to ${plan}`);
+        console.log(`User ${userId} subscribed to ${plan}`);
+        break;
+      }
+
+      case "subscription_updated": {
+        const { attributes } = event.data;
+        const plan = VARIANT_TO_PLAN[attributes.variant_id] || "FREE";
+        
+        // Check if subscription is cancelled (scheduled for cancellation)
+        const isCancelled = attributes.cancelled;
+        
+        await db.user.update({
+          where: { id: userId },
+          data: {
+            plan,
+            lsCustomerId: String(attributes.customer_id),
+            lsSubscriptionId: event.data.id,
+            lsVariantId: String(attributes.variant_id),
+            lsCurrentPeriodEnd: attributes.renews_at ? new Date(attributes.renews_at) : 
+                               (attributes.ends_at ? new Date(attributes.ends_at) : null),
+            lsCancelledAt: isCancelled ? new Date() : null,
+          },
+        });
+        
+        console.log(`User ${userId} subscription updated: ${plan}, cancelled: ${isCancelled}`);
         break;
       }
 
       case "subscription_cancelled":
       case "subscription_expired": {
+        // Subscription has actually ended - downgrade to FREE
         await db.user.update({
           where: { id: userId },
           data: {
@@ -61,10 +86,12 @@ export async function POST(request: NextRequest) {
             lsSubscriptionId: null,
             lsVariantId: null,
             lsCurrentPeriodEnd: null,
+            lsCancelledAt: null,
+            lsCustomerId: null,
           },
         });
         
-        console.log(`User ${userId} downgraded to FREE`);
+        console.log(`User ${userId} downgraded to FREE (subscription ended)`);
         break;
       }
 
@@ -75,10 +102,26 @@ export async function POST(request: NextRequest) {
           where: { id: userId },
           data: {
             lsCurrentPeriodEnd: attributes.renews_at ? new Date(attributes.renews_at) : null,
+            lsCancelledAt: null, // Payment success clears cancellation
           },
         });
         
         console.log(`User ${userId} payment successful`);
+        break;
+      }
+
+      case "subscription_resumed": {
+        const { attributes } = event.data;
+        
+        await db.user.update({
+          where: { id: userId },
+          data: {
+            lsCancelledAt: null,
+            lsCurrentPeriodEnd: attributes.renews_at ? new Date(attributes.renews_at) : null,
+          },
+        });
+        
+        console.log(`User ${userId} subscription resumed`);
         break;
       }
 

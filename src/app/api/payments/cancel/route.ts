@@ -20,32 +20,36 @@ export async function POST(request: NextRequest) {
       return NextResponse.json({ error: "User not found" }, { status: 404 });
     }
 
-    // Try to cancel on Lemon Squeezy (but don't fail if it errors)
-    if (user.lsSubscriptionId) {
-      try {
-        await cancelUserSubscription(user.lsSubscriptionId);
-        console.log("Lemon Squeezy subscription cancelled:", user.lsSubscriptionId);
-      } catch (lsError) {
-        console.error("Lemon Squeezy cancel error (continuing anyway):", lsError);
-        // Continue to update DB even if LS fails
-      }
+    if (!user.lsSubscriptionId) {
+      return NextResponse.json({ error: "No active subscription" }, { status: 400 });
     }
 
-    // Always update user in database
+    if (user.lsCancelledAt) {
+      return NextResponse.json({ error: "Subscription already cancelled" }, { status: 400 });
+    }
+
+    // Cancel at end of billing period (no refund)
+    try {
+      await cancelUserSubscription(user.lsSubscriptionId);
+      console.log("Subscription scheduled for cancellation:", user.lsSubscriptionId);
+    } catch (lsError) {
+      console.error("Lemon Squeezy cancel error:", lsError);
+      return NextResponse.json({ error: "Failed to cancel subscription" }, { status: 500 });
+    }
+
+    // Mark as cancelled (but keep plan until period ends)
     await db.user.update({
       where: { id: user.id },
       data: {
-        plan: "FREE",
-        lsSubscriptionId: null,
-        lsCustomerId: null,
-        lsVariantId: null,
-        lsCurrentPeriodEnd: null,
+        lsCancelledAt: new Date(),
       },
     });
 
-    console.log("User downgraded to FREE:", user.email);
-
-    return NextResponse.json({ success: true, message: "Subscription cancelled" });
+    return NextResponse.json({ 
+      success: true, 
+      message: "Subscription will be cancelled at the end of billing period",
+      endsAt: user.lsCurrentPeriodEnd,
+    });
   } catch (error) {
     console.error("Cancel error:", error);
     return NextResponse.json({ error: "Failed to cancel subscription" }, { status: 500 });

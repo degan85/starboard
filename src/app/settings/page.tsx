@@ -23,6 +23,7 @@ interface UserData {
   image: string | null;
   plan: "FREE" | "PRO" | "BUSINESS";
   lsCurrentPeriodEnd: string | null;
+  lsCancelledAt: string | null;
   createdAt: string;
   _count: { projects: number };
   testimonialCount: number;
@@ -110,7 +111,11 @@ export default function SettingsPage() {
   };
 
   const handleCancelSubscription = async () => {
-    if (!confirm("Are you sure you want to cancel your subscription? You will lose access to Pro features immediately.")) {
+    const endDate = user?.lsCurrentPeriodEnd 
+      ? new Date(user.lsCurrentPeriodEnd).toLocaleDateString()
+      : "end of billing period";
+    
+    if (!confirm(`Are you sure you want to cancel? You'll keep access until ${endDate}.`)) {
       return;
     }
 
@@ -121,7 +126,7 @@ export default function SettingsPage() {
       const data = await response.json();
       
       if (data.success) {
-        alert("Subscription cancelled successfully");
+        alert(`Subscription will be cancelled on ${endDate}`);
         window.location.reload();
       } else {
         alert(data.error || "Failed to cancel subscription");
@@ -129,6 +134,29 @@ export default function SettingsPage() {
     } catch (error) {
       console.error("Failed to cancel subscription:", error);
       alert("Failed to cancel subscription");
+    }
+  };
+
+  const handleResumeSubscription = async () => {
+    if (!confirm("Resume your subscription?")) {
+      return;
+    }
+
+    try {
+      const response = await fetch("/api/payments/resume", {
+        method: "POST",
+      });
+      const data = await response.json();
+      
+      if (data.success) {
+        alert("Subscription resumed!");
+        window.location.reload();
+      } else {
+        alert(data.error || "Failed to resume subscription");
+      }
+    } catch (error) {
+      console.error("Failed to resume subscription:", error);
+      alert("Failed to resume subscription");
     }
   };
 
@@ -258,14 +286,24 @@ export default function SettingsPage() {
 
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 p-4 bg-gray-50 rounded-xl mb-6">
               <div className="flex items-center gap-3">
-                <div className={`p-2 rounded-lg ${plan.color}`}>
+                <div className={`p-2 rounded-lg ${user.lsCancelledAt ? "bg-orange-100 text-orange-700" : plan.color}`}>
                   <PlanIcon className="w-5 h-5" />
                 </div>
                 <div>
-                  <p className="font-semibold text-gray-900">{plan.name} Plan</p>
+                  <p className="font-semibold text-gray-900">
+                    {plan.name} Plan
+                    {user.lsCancelledAt && (
+                      <span className="ml-2 text-xs bg-orange-100 text-orange-700 px-2 py-0.5 rounded-full">
+                        Cancelling
+                      </span>
+                    )}
+                  </p>
                   {user.lsCurrentPeriodEnd && (
                     <p className="text-sm text-gray-500">
-                      Renews on {new Date(user.lsCurrentPeriodEnd).toLocaleDateString()}
+                      {user.lsCancelledAt 
+                        ? `Access until ${new Date(user.lsCurrentPeriodEnd).toLocaleDateString()}`
+                        : `Renews on ${new Date(user.lsCurrentPeriodEnd).toLocaleDateString()}`
+                      }
                     </p>
                   )}
                 </div>
@@ -282,27 +320,47 @@ export default function SettingsPage() {
                 )}
                 {user.plan === "PRO" && (
                   <>
-                    <Link
-                      href="/pricing"
-                      className="px-4 py-2 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600 transition text-sm font-medium"
+                    {!user.lsCancelledAt && (
+                      <Link
+                        href="/pricing"
+                        className="px-4 py-2 bg-yellow-500 text-white rounded-lg hover:bg-yellow-600 transition text-sm font-medium"
+                      >
+                        Upgrade to Business
+                      </Link>
+                    )}
+                    {user.lsCancelledAt ? (
+                      <button
+                        onClick={handleResumeSubscription}
+                        className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition text-sm font-medium"
+                      >
+                        Resume Plan
+                      </button>
+                    ) : (
+                      <button
+                        onClick={handleCancelSubscription}
+                        className="px-4 py-2 border border-red-200 text-red-600 rounded-lg hover:bg-red-50 transition text-sm font-medium"
+                      >
+                        Cancel Plan
+                      </button>
+                    )}
+                  </>
+                )}
+                {user.plan === "BUSINESS" && (
+                  user.lsCancelledAt ? (
+                    <button
+                      onClick={handleResumeSubscription}
+                      className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition text-sm font-medium"
                     >
-                      Upgrade to Business
-                    </Link>
+                      Resume Plan
+                    </button>
+                  ) : (
                     <button
                       onClick={handleCancelSubscription}
                       className="px-4 py-2 border border-red-200 text-red-600 rounded-lg hover:bg-red-50 transition text-sm font-medium"
                     >
                       Cancel Plan
                     </button>
-                  </>
-                )}
-                {user.plan === "BUSINESS" && (
-                  <button
-                    onClick={handleCancelSubscription}
-                    className="px-4 py-2 border border-red-200 text-red-600 rounded-lg hover:bg-red-50 transition text-sm font-medium"
-                  >
-                    Cancel Plan
-                  </button>
+                  )
                 )}
               </div>
             </div>

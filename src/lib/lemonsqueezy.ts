@@ -2,7 +2,7 @@ import {
   lemonSqueezySetup,
   createCheckout,
   getSubscription,
-  cancelSubscription,
+  updateSubscription,
 } from "@lemonsqueezy/lemonsqueezy.js";
 
 // Initialize Lemon Squeezy
@@ -56,10 +56,19 @@ export async function getSubscriptionDetails(subscriptionId: string) {
   return subscription.data?.data;
 }
 
-// Cancel subscription
+// Cancel subscription at period end (no refund)
 export async function cancelUserSubscription(subscriptionId: string) {
   initLemonSqueezy();
-  const result = await cancelSubscription(subscriptionId);
+  // cancelled: true means cancel at end of billing period
+  const result = await updateSubscription(subscriptionId, { cancelled: true });
+  return result.data?.data;
+}
+
+// Resume cancelled subscription
+export async function resumeUserSubscription(subscriptionId: string) {
+  initLemonSqueezy();
+  // cancelled: false means resume subscription
+  const result = await updateSubscription(subscriptionId, { cancelled: false });
   return result.data?.data;
 }
 

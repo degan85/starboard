@@ -22,6 +22,7 @@ export async function GET(request: NextRequest) {
         plan: true,
         lsCurrentPeriodEnd: true,
         lsSubscriptionId: true,
+        lsCancelledAt: true,
         createdAt: true,
         _count: {
           select: { projects: true },
